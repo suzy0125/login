@@ -1,0 +1,20 @@
+{%extends "blog/base.html"%}
+
+{%block content%}
+<div style="text-align: right">
+        {%if user.is_active%}
+        <p>{{user.username}}님 반갑습니다</p>
+        <P><a href="{% url 'logout'%}">logout</a></P>
+        {%else%}
+        <p>로그인 아직</p>
+        <a href="%url 'login'%"></a>
+        {%endif%}
+      </div>
+    {%for post in posts.all%}
+    <div>
+        <h2><a href= "{% url 'main' post.id %}">{{post.title}}</a></h2>
+        <p>{{post.author}}</p>
+        <p>{{post.created_date}}</p>
+    </div>
+    {%endfor%}
+{%endblock%}
