@@ -13,6 +13,5 @@ def signup(request):
             userform.save()
             return redirect('home')
     elif request.method == 'GET':
-        userform = CreateUserForm()
-    
+        userform = CreateUserForm()  
     return render(request, 'registration/signup.html', {"userform":userform})

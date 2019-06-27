@@ -4,7 +4,7 @@ from django.utils import timezone
 
 class Post (models.Model):
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    title = models.CharField(max_length = 200)
+    title = models.CharField(max_length = 100)
     text = models.TextField()
     created_date = models.DateTimeField(default= timezone.now)
 
@@ -14,3 +14,15 @@ class Post (models.Model):
 
     def __str__(self):
         return self.title
+
+    def summary(self):
+        return self.title[ :6]
+
+class Comment(models.Model):
+    post=models.ForeignKey('blog.Post', related_name='comments', on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=200)
+    text = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.text

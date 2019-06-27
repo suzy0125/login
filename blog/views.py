@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404, redirect
-from .models import Post
-from .forms import PostForm
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
 from  django.utils import timezone
 from django.contrib.auth.decorators import login_required
  
@@ -14,7 +14,8 @@ def home(request):
 @login_required
 def main (request, post_id):
     post_detail = get_object_or_404 (Post, pk = post_id)
-    return render(request, 'blog/main.html',{'post': post_detail})
+    form = CommentForm()
+    return render(request, 'blog/main.html',{'post': post_detail, 'form':form})
 
 def post_new(request):
     if request.method =="POST":
@@ -44,3 +45,19 @@ def post_delete(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     post.delete()
     return redirect('home')
+
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment =form.save(commit = False)
+            comment.post =post
+            comment.save()
+    return redirect('main', post_id=post.pk)
+
+def comment_delete(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    post = comment.post
+    comment.delete()
+    return redirect('main', post_id=post.id)
